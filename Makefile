@@ -5,6 +5,10 @@ DOCKER_COMPOSE_PHP = docker-compose exec php-fpm
 # DOCKER COMPOSE OPERATIONS #
 #############################
 
+env:
+	cp .env.example .env && \
+	cp ./app/.env.dev ./app/.env
+
 up:
 	${DOCKER_COMPOSE} up -d --build
 
