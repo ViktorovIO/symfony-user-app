@@ -1,5 +1,5 @@
 DOCKER_COMPOSE = docker-compose -f ./docker-compose.yml --env-file ./.env
-DOCKER_COMPOSE_PHP_FPM = ${DOCKER_COMPOSE} exec /bin/bash
+DOCKER_COMPOSE_PHP = docker-compose exec php-fpm
 
 #############################
 # DOCKER COMPOSE OPERATIONS #
@@ -20,4 +20,4 @@ restart:
 ###############
 
 php:
-	${DOCKER_COMPOSE_PHP_FPM}
+	${DOCKER_COMPOSE_PHP} /bin/bash
