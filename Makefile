@@ -20,4 +20,10 @@ restart:
 ###############
 
 php:
-	${DOCKER_COMPOSE_PHP} /bin/bash
+	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bash
+
+cache-clear:
+	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console cache:clear
+
+rebuild: cache-clear down up \
+	@echo "rebuilded"
