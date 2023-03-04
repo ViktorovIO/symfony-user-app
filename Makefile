@@ -26,6 +26,9 @@ restart:
 php:
 	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bash
 
+composer:
+	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm composer install
+
 cache-clear:
 	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console cache:clear
 
