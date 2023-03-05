@@ -37,3 +37,6 @@ cache-clear:
 
 rebuild: cache-clear down up \
 	@echo "rebuilded"
+
+db-create:
+	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console doctrine:database:create
