@@ -29,6 +29,9 @@ php:
 composer:
 	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm composer install
 
+jwt:
+	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console lexik:jwt:generate-keypair
+
 cache-clear:
 	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console cache:clear
 
