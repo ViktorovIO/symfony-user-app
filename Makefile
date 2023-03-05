@@ -40,3 +40,9 @@ rebuild: cache-clear down up \
 
 db-create:
 	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console doctrine:database:create
+
+new-migration:
+	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console make:migration
+
+migrate:
+	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console doctrine:migrations:migrate
