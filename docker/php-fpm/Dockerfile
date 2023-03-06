@@ -1,8 +1,8 @@
 FROM php:8.2-fpm
 
 RUN apt update \
-    && apt install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip libpq-dev \
-    && docker-php-ext-install intl opcache \
+    && apt install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip libpq-dev libsodium-dev \
+    && docker-php-ext-install intl opcache sodium \
     && pecl install apcu \
     && docker-php-ext-enable apcu \
     && docker-php-ext-configure zip \
