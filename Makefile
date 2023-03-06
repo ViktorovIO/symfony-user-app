@@ -1,4 +1,4 @@
-DOCKER_COMPOSE = docker-compose -f ./docker-compose.yml --env-file ./.env
+DOCKER_COMPOSE = docker-compose -f docker-compose.yml -f ./app/docker-compose.yml
 DOCKER_COMPOSE_PHP = docker-compose exec php-fpm
 
 #############################
@@ -10,7 +10,7 @@ env:
 	cp ./app/.env.dev ./app/.env
 
 up:
-	${DOCKER_COMPOSE} up -d --build
+	docker-compose -f docker-compose.yml -f ./app/docker-compose.yml up -d --build
 
 down:
 	${DOCKER_COMPOSE} down
@@ -35,8 +35,11 @@ jwt:
 cache-clear:
 	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console cache:clear
 
-rebuild: cache-clear down up \
-	@echo "rebuilded"
+rebuild: cache-clear down up
+
+############
+# DATABASE #
+############
 
 db-create:
 	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console doctrine:database:create
