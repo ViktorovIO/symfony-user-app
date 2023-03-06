@@ -19,7 +19,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email(message: 'The email {{ value }} is not a valid email.',)]
-    #[Assert\NotBlank(message: 'The email is can\'t be empty')]
+    #[Assert\NotBlank(message: 'Email field is can\'t be empty')]
     private string $email;
 
     #[ORM\Column]
@@ -29,6 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank(message: 'Password field is can\'t be empty')]
     private string $password;
 
     public function __construct(?int $id, string $email, string $password, array $roles = [])
