@@ -20,3 +20,7 @@ You must have:
 ## Database initialize:
 1. Check your `app/.env` file: it should have `DATABASE_URL`;
 2. Run command `make db-create`.
+
+## RabbitMQ admin panel:
+- http://localhost:15672/
+- Login (default): rabbitmq, Password (default): rabbitmq

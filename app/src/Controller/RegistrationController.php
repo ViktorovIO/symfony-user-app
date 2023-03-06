@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Exception\UserSaveException;
+use App\Message\Notification\SendEmailMessage;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -19,11 +21,13 @@ class RegistrationController extends AbstractController
 {
     private UserService $userService;
     private ValidatorInterface $validator;
+    private MessageBusInterface $eventBus;
 
-    public function __construct(UserService $userService, ValidatorInterface $validator)
+    public function __construct(UserService $userService, ValidatorInterface $validator, MessageBusInterface $eventBus)
     {
         $this->userService = $userService;
         $this->validator = $validator;
+        $this->eventBus = $eventBus;
     }
 
     #[Route('/register', methods: ['POST'])]
@@ -44,6 +48,9 @@ class RegistrationController extends AbstractController
         } catch (UserSaveException $exception) {
             return $this->json(['message' => $exception->getMessage()]);
         }
+
+        $message = "Registered Successfully!\nYour password is: {$password}";
+        $this->eventBus->dispatch(new SendEmailMessage($message, $email));
 
 
         return $this->json(['message' => 'Registered Successfully']);

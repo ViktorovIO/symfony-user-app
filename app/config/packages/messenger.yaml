@@ -8,11 +8,26 @@ framework:
             # async: '%env(MESSENGER_TRANSPORT_DSN)%'
             # failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
-            amqp: '%env(MESSENGER_TRANSPORT_DSN)%'
+            async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            failed: 'doctrine://default?queue_name=failed'
+
+#            notification_queue:
+#                serializer: messenger.transport.symfony_serializer
+#                dsn: '%env(DSN_ASYNC_TRANSPORT)%'
+#                options:
+#                    exchange:
+#                        name: worker-notification
+#                        type: direct
+#                        default_publish_routing_key: main
+#                    queues:
+#                        notification_queue:
+#                            binding_keys: [ main ]
 
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
+            # 'App\Message\Notification\SendNotificationMessageInterface': [ notification_queue ]
+            'App\Message\Notification\SendNotificationMessageInterface': async
 
 # when@test:
 #    framework:

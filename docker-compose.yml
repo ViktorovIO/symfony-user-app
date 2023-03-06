@@ -59,8 +59,18 @@ services:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     ports:
-      - "4672:5672"
-      - "14672:15672"
+      - "5672:5672"
+      - "15672:15672"
+
+  mailhog:
+    container_name: mailhog
+    restart: always
+    image: mailhog/mailhog:v1.0.1
+    expose:
+      - "1025"
+      - "8025"
+    ports:
+      - "127.0.0.1:1025:8025"
 
 volumes:
   db-data:
