@@ -35,6 +35,9 @@ jwt:
 cache-clear:
 	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/console cache:clear
 
+tests:
+	docker-compose -f ./docker-compose.yml exec -u www-data php-fpm bin/phpunit
+
 rebuild: cache-clear down up
 
 ############
