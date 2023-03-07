@@ -8,6 +8,7 @@ use App\Model\User;
 use App\Exception\UserSaveException;
 use App\Repository\UserRepository;
 use App\Transformer\UserTransformer;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -20,19 +21,41 @@ class UserService
     private UserTransformer $userTransformer;
     private ValidatorInterface $validator;
     private MessageBusInterface $eventBus;
+    private LoggerInterface $logger;
 
     public function __construct(
         UserPasswordHasherInterface $passwordHasher,
         UserRepository $userRepository,
         UserTransformer $userTransformer,
         ValidatorInterface $validator,
-        MessageBusInterface $eventBus
+        MessageBusInterface $eventBus,
+        LoggerInterface $logger
     ) {
         $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;
         $this->userTransformer = $userTransformer;
         $this->validator = $validator;
         $this->eventBus = $eventBus;
+        $this->logger = $logger;
+    }
+
+    public function findAll(): array
+    {
+        $this->logger->info('Get all users');
+
+        return $this->userRepository->findAll();
+    }
+
+    public function searchByQuery(array $searchQuery)
+    {
+        $logMessage = 'Search by query: ';
+        foreach ($searchQuery as $key => $value) {
+            $logMessage .= "$key -> $value, ";
+        }
+
+        $this->logger->info($logMessage);
+
+        return $this->userRepository->searchByQuery($searchQuery);
     }
 
     /**
@@ -40,6 +63,8 @@ class UserService
      */
     public function create(User $user): void
     {
+        $this->logger->info('Start User create');
+
         try {
             $email = $user->getEmail();
             if ($this->getByEmail($email) !== null) {
@@ -48,11 +73,16 @@ class UserService
 
             $this->saveUser($user);
         } catch (Throwable $exception) {
-            throw new UserSaveException('User save error: ' . $exception->getMessage());
+            $message = 'User create error: ' . $exception->getMessage();
+            $this->logger->error($message);
+
+            throw new UserSaveException($message);
         }
 
         $message = "Registered Successfully!\nYour password is: {$user->getPassword()}";
         $this->eventBus->dispatch(new SendEmailMessage($message, $email));
+
+        $this->logger->info('User registered successfully');
     }
 
     /**
@@ -60,6 +90,8 @@ class UserService
      */
     public function update(User $user): void
     {
+        $this->logger->info('Start User update');
+
         try {
             $email = $user->getEmail();
             if ($this->getByEmail($email) === null) {
@@ -68,14 +100,28 @@ class UserService
 
             $this->saveUser($user);
         } catch (Throwable $exception) {
-            throw new UserSaveException('User save error: ' . $exception->getMessage());
+            $message = 'User update error: ' . $exception->getMessage();
+            $this->logger->error($message);
+
+            throw new UserSaveException($message);
         }
 
         $message = "Updated Successfully!\nYour password is: {$user->getPassword()}";
         $this->eventBus->dispatch(new SendEmailMessage($message, $email));
+
+        $this->logger->info('User updated successfully');
     }
 
-    public function getByEmail(string $email): ?UserEntity
+    public function delete(User $user): void
+    {
+        $this->logger->info('Start User delete');
+
+        $this->userRepository->remove($this->userTransformer->transform($user), true);
+
+        $this->logger->info('User deleted successfully');
+    }
+
+    private function getByEmail(string $email): ?UserEntity
     {
         return $this->userRepository->findOneBy(['email' => $email]);
     }

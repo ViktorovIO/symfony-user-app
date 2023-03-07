@@ -24,3 +24,6 @@ You must have:
 ## RabbitMQ admin panel:
 - http://localhost:15672/
 - Login (default): rabbitmq, Password (default): rabbitmq
+
+## Local Email check:
+- http://127.0.0.1:1025/

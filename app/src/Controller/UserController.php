@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Exception\UserSaveException;
 use App\Form\UserType;
-use App\Repository\UserRepository;
 use App\Service\UserService;
 use App\Transformer\UserTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,16 +17,11 @@ class UserController extends AbstractController
 {
     private UserTransformer $userTransformer;
     private UserService $userService;
-    private UserRepository $userRepository;
 
-    public function __construct(
-        UserTransformer $userTransformer,
-        UserService $userService,
-        UserRepository $userRepository
-    ) {
+    public function __construct(UserTransformer $userTransformer, UserService $userService)
+    {
         $this->userTransformer = $userTransformer;
         $this->userService = $userService;
-        $this->userRepository = $userRepository;
     }
 
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
@@ -35,8 +29,8 @@ class UserController extends AbstractController
     {
         $searchQuery = $this->makeSearchQuery($request);
         $users = count($searchQuery) > 0
-            ? $this->userRepository->searchByQuery($searchQuery)
-            : $this->userRepository->findAll();
+            ? $this->userService->searchByQuery($searchQuery)
+            : $this->userService->findAll();
 
         return $this->render('user/index.html.twig', [
             'users' => $users,
@@ -75,13 +69,17 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    public function edit(Request $request, User $user): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userRepository->save($user, true);
+            try {
+                $this->userService->update($this->userTransformer->reverseTransform($user));
+            } catch (UserSaveException $exception) {
+                return $this->json(['message' => $exception->getMessage()]);
+            }
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -93,10 +91,10 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    public function delete(Request $request, User $user): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $userRepository->remove($user, true);
+            $this->userService->delete($this->userTransformer->reverseTransform($user));
         }
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
