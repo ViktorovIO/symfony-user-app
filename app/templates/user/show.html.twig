@@ -16,6 +16,26 @@
                 <td>{{ user.email }}</td>
             </tr>
             <tr>
+                <th>PersonalNumber</th>
+                <td>{{ user.personalNumber }}</td>
+            </tr>
+            <tr>
+                <th>LastName</th>
+                <td>{{ user.lastName }}</td>
+            </tr>
+            <tr>
+                <th>FirstName</th>
+                <td>{{ user.firstName }}</td>
+            </tr>
+            <tr>
+                <th>Surname</th>
+                <td>{{ user.surname }}</td>
+            </tr>
+            <tr>
+                <th>PhoneList</th>
+                <td>{{ user.phoneList ? user.phoneList|json_encode : '' }}</td>
+            </tr>
+            <tr>
                 <th>Roles</th>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
             </tr>

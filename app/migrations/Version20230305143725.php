@@ -22,6 +22,21 @@ final class Version20230305143725 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE "user_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE "user" (id INT NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql(<<<SQL
+                CREATE TABLE "user" (
+                    id INT NOT NULL,
+                    email VARCHAR(180) NOT NULL,
+                    personal_number varchar(50) NOT NULL,
+                    last_name varchar(180) NOT NULL,
+                    first_name varchar(180) NOT NULL,
+                    surname varchar(180) NULL,
+                    phone_list json NOT NULL,
+                    roles JSON NOT NULL,
+                    password VARCHAR(255) NOT NULL,
+                    PRIMARY KEY(id)
+                )
+            SQL
+        );
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
     }
 

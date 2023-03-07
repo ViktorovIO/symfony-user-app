@@ -15,12 +15,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email(message: 'The email {{ value }} is not a valid email.',)]
     #[Assert\NotBlank(message: 'Email field is can\'t be empty')]
     private string $email;
+
+    #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'Personal Number field is can\'t be empty')]
+    private string $personalNumber;
+
+    #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: 'Last Name field is can\'t be empty')]
+    private string $lastName;
+
+    #[ORM\Column(length: 180)]
+    #[Assert\NotBlank(message: 'First Name field is can\'t be empty')]
+    private string $firstName;
+
+    #[ORM\Column(length: 180)]
+    private ?string $surname = null;
+
+    #[ORM\Column]
+    private array $phoneList;
 
     #[ORM\Column]
     private array $roles;
@@ -32,22 +50,74 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: 'Password field is can\'t be empty')]
     private string $password;
 
-    public function __construct(?int $id, string $email, string $password, array $roles = [])
-    {
-        $this->id = $id;
-        $this->email = $email;
-        $this->password = $password;
-        $this->roles = $roles;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getPersonalNumber(): string
+    {
+        return $this->personalNumber;
+    }
+
+    public function setPersonalNumber(string $personalNumber): void
+    {
+        $this->personalNumber = $personalNumber;
+    }
+
+    public function getLastName(): string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }
+
+    public function getFirstName(): string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function getSurname(): ?string
+    {
+        return $this->surname;
+    }
+
+    public function setSurname(?string $surname): void
+    {
+        $this->surname = $surname;
+    }
+
+    public function getPhoneList(): array
+    {
+        return $this->phoneList;
+    }
+
+    public function setPhoneList(array $phoneList): void
+    {
+        $this->phoneList = $phoneList;
     }
 
     /**
@@ -70,6 +140,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
     }
 
     /**

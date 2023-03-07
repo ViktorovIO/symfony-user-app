@@ -56,6 +56,38 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->save($user, true);
     }
 
+    public function searchByQuery(array $queryList)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        if (isset($queryList['last_name'])) {
+            $qb->andWhere('u.lastName LIKE :last_name')
+                ->setParameter('last_name', "%{$queryList['last_name']}%");
+        }
+
+        if (isset($queryList['first_name'])) {
+            $qb->andWhere('u.firstName LIKE :first_name')
+                ->setParameter('first_name', "%{$queryList['first_name']}%");
+        }
+
+        if (isset($queryList['surname'])) {
+            $qb->andWhere('u.surname LIKE :surname')
+                ->setParameter('surname', "%{$queryList['surname']}%");
+        }
+
+        if (isset($queryList['phone_list'])) {
+            $qb->andWhere('CAST(u.phoneList AS TEXT) LIKE :phone_list')
+                ->setParameter('phone_list', "%{$queryList['phone_list']}%");
+        }
+
+        if (isset($queryList['phone_count'])) {
+            $qb->andWhere('JSON_ARRAY_LENGTH(u.phoneList) >= :phone_count')
+                ->setParameter('phone_count', (int) $queryList['phone_count']);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return User[] Returns an array of User objects
 //     */

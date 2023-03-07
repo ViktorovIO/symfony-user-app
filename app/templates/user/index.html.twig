@@ -1,15 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
+{% block title %}User List{% endblock %}
 
 {% block body %}
     <h1>User index</h1>
+
+    {{ include('user/search_form.html.twig') }}
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Email</th>
+                <th>PersonalNumber</th>
+                <th>LastName</th>
+                <th>FirstName</th>
+                <th>Surname</th>
+                <th>PhoneList</th>
+                <th>PhonesCount</th>
                 <th>Roles</th>
                 <th>Password</th>
                 <th>actions</th>
@@ -20,6 +28,12 @@
             <tr>
                 <td>{{ user.id }}</td>
                 <td>{{ user.email }}</td>
+                <td>{{ user.personalNumber }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.surname }}</td>
+                <td>{{ user.phoneList ? user.phoneList|json_encode : '' }}</td>
+                <td>{{ user.phoneList|length }}</td>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                 <td>{{ user.password }}</td>
                 <td>
@@ -29,7 +43,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="10">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

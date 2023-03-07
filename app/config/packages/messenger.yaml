@@ -9,7 +9,6 @@ framework:
             # failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
             async: '%env(MESSENGER_TRANSPORT_DSN)%'
-            failed: 'doctrine://default?queue_name=failed'
 
 #            notification_queue:
 #                serializer: messenger.transport.symfony_serializer
