@@ -10,18 +10,6 @@ framework:
             # sync: 'sync://'
             async: '%env(MESSENGER_TRANSPORT_DSN)%'
 
-#            notification_queue:
-#                serializer: messenger.transport.symfony_serializer
-#                dsn: '%env(DSN_ASYNC_TRANSPORT)%'
-#                options:
-#                    exchange:
-#                        name: worker-notification
-#                        type: direct
-#                        default_publish_routing_key: main
-#                    queues:
-#                        notification_queue:
-#                            binding_keys: [ main ]
-
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

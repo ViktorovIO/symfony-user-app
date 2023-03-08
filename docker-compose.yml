@@ -16,7 +16,7 @@ services:
 #    volumes:
 #      - db-data:/var/lib/postgresql/data:rw
 
-  php-fpm:
+  php-fpm: &php
     container_name: php-fpm
     restart: always
     build:
@@ -71,6 +71,14 @@ services:
       - "8025"
     ports:
       - "127.0.0.1:1025:8025"
+
+  worker-notification:
+    container_name: worker-notification
+    <<: *php
+    user: ${UID}:${GUID}
+    command: php /var/www/symfony-user-app/bin/console messenger:consume --time-limit=3600 async --queues=notification_queue
+    ports:
+      - "9005:9005"
 
 volumes:
   db-data:

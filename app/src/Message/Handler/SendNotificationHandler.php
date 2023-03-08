@@ -36,6 +36,5 @@ class SendNotificationHandler implements MessageHandlerInterface
         } catch (TransportExceptionInterface $exception) {
             throw new SendEmailException('Mail is not sended. Reason: ' . $exception->getMessage());
         }
-        dd('Hello, new message!');
     }
 }
