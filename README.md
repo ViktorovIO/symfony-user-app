@@ -3,8 +3,8 @@ Dockerized Symfony Application.
 
 ## Requirements:
 You must have:
-- Docker;
-- Docker Compose.
+- [Docker](https://docs.docker.com/engine/install/);
+- [Docker Compose](https://docs.docker.com/compose/install/#scenario-two-install-the-compose-plugin).
 
 ## For start:
 1. Clone this repo on your computer;
