@@ -40,3 +40,9 @@ You must have:
 - [GET] `http://localhost/user/{userId}` - User show page;
 - [GET, POST] `http://localhost/user/{userId}/edit` - Edit User page;
 - [POST] `http://localhost/user/{id}` - Remove User page.
+
+## TODO:
+- [ ] Tests
+- [ ] RESTful User API
+- [ ] Make styles in twig templates
+- [ ] Swagger documentation
